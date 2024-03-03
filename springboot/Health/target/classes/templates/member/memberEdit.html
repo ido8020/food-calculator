@@ -12,7 +12,7 @@
     }
 
     .table {
-        width: 50%; /* 테이블 너비 100%로 설정 */
+        width: 100%; /* 테이블 너비 50%로 설정 */
         table-layout: fixed; /* 테이블 레이아웃을 고정으로 설정 */
     }
 
@@ -75,9 +75,9 @@
     </div>
 <script>
 function roleCK() {
-    var selectedValue = document.getElementsByName("role")[0].value;
+    var selectRole = document.getElementsByName("role")[0].value;
 
-    if (selectedValue === "member") {
+    if (selectRole === "member") {
         var confirmed = confirm("회원 권한을 정말로 낮추시겠습니까?");
         if (confirmed) {
             // "확인"을 선택한 경우

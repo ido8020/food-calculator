@@ -1,0 +1,70 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="/include/top"></div>
+<style>
+	
+    .table-container {
+        overflow-x: auto; /* 가로 스크롤이 나타나도록 함 */
+        max-width: 100%; /* 테이블 최대 너비 설정 */
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+    .table {
+        width: 100%; /* 테이블 너비 100%로 설정 */
+        table-layout: fixed; /* 테이블 레이아웃을 고정으로 설정 */
+    }
+
+    .table th,
+    .table td {
+        font-size: 18px; /* 글자 크기 조절 */
+        text-align: center; /* 텍스트 가운데 정렬 */
+        white-space: nowrap; /* 글자 줄 바꿈 방지 */
+        overflow: hidden; /* 넘치는 내용 숨김 */
+        text-overflow: ellipsis; /* 넘치는 내용을 생략 부호(...)로 표시 */
+    }
+ 	
+    /* 추가적인 스타일 조정이 필요한 경우 여기에 추가할 수 있습니다. */
+</style>
+<main>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">회원 수정</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="/index.do">처음으로 돌아가기</a></li>
+            <li class="breadcrumb-item active"></li>
+        </ol>
+        <div class="card mb-4">
+            <div class="card-body">
+                <p class="mb-0">
+                             <form action="Member.do" method="post" th:object="${m}">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>회원 번호</th>
+                                <th>아이디</th>
+                                <th>비밀번호</th>
+                                <th>권한</th>
+                                <th>이름</th>
+                                <th>수정하기</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <!-- 폼에 Thymeleaf의 th:field를 사용하여 각 input과 매핑 -->
+                                <td><input type="text" th:field="*{memberidx}" readonly></td>
+                                <td><input type="text" th:field="*{id}"></td>
+                                <td><input type="text" th:field="*{password}"></td>
+                                <td><input type="text" th:field="*{role}"></td>
+                                <td><input type="text" th:field="*{name}"></td>
+                                <td><input type="submit" value="수정"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+                       
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="/include/bottom"></div>

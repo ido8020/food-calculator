@@ -1,0 +1,43 @@
+<!--  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ -->
+ 
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "E:\DTD\mybatis-3-mapper.dtd">
+ <mapper namespace="com.rubypaper.member.MemberDao">
+  
+  <select id="MemberList" parameterType="com.rubypaper.member.MemberVO"
+                    resultType="com.rubypaper.member.MemberVO" >
+	
+	select  *  from member_tbl_02
+    
+  </select> 
+   <select id="custno" resultType="int" >
+	
+	select max(custno)+1  from member_tbl_02
+    
+  </select> 
+ 
+  <select id="edit"  
+   		  parameterType="com.rubypaper.member.MemberVO"
+          resultType="com.rubypaper.member.MemberVO" >
+    
+    select  custno,custname,phone,address,joindate, grade,city, password 
+    from member_tbl_02 where custno=#{custno}
+    
+  </select> 
+  
+  <insert id="insert" parameterType="com.rubypaper.member.MemberVO">
+    INSERT INTO member_tbl_02(custno , custname, phone,address, joindate,grade,city)
+    VALUES (#{custno},#{custname},#{phone}, #{address}, #{joindateStr},#{grade},#{city})
+  </insert>
+ <update id="update" parameterType="com.rubypaper.member.MemberVO">
+
+    update member_tbl_02 
+    set phone=#{phone},address=#{address},password=#{password} 
+    where custno=#{custno}
+       
+  </update> 
+  
+ </mapper>

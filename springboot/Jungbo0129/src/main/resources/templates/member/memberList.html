@@ -1,0 +1,56 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+table {
+width:800px;
+height:300px;
+}
+tr{
+text-align : center;
+}
+#tdleft{
+text-align : left;
+}
+</style>
+
+</head>
+<body>
+<div th:replace="/include/top"></div>
+
+<section>
+
+<br><br>
+<div align=center> 
+
+  <h1> 회원목록 보기 </h1>
+  <table border=1>
+   <tr> <td>custno</td><td> 이름 </td><td> 연락처 </td><td> 주소 </td>
+        <td> 가입일 </td><td> 등급 </td><td> 도시번호 </td> </tr>
+  
+     <tr  th:each="m : ${li}"> 
+     <td th:text="${m.custno}"> 
+     <td ><a th:href="@{/memberEdit.do(custno=${m.custno},custname=${m.custname})}" th:text="${m.custname}"></a></td>  
+     <td th:text="${m.phone}">
+     <td id="tdleft" th:text="${m.address}">
+     <td th:text="${#dates.format(m.joindate, 'yyyy년MM월dd일')}"></td>
+     
+     <td>
+     	<span th:switch="${m.grade}">
+     	<span th:case="A">VIP</span>
+     	<span th:case="B">일반</span>
+     	<span th:case="C">직원</span>
+     </span>
+     </td>
+     <td th:text="${m.city}"></td>
+
+     
+  </table>
+  
+</div>
+<br>
+</section>
+<div th:replace="/include/bottom::footer"></div>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!--  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ -->
+ 
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "E:\DTD\mybatis-3-mapper.dtd">
+ <mapper namespace="com.health.food.FoodDao">
+  
+	<select id="selectAll" parameterType="com.health.food.FoodVO"
+                    resultType="com.health.food.FoodVO" >
+	<![CDATA[
+	  select rownum, K.* 
+	   from 
+	     (select rownum as rnum, M.*
+	      from (select * from food01 	      
+	          WHERE 1=1
+	         ]]>
+	         	
+			  <if test="ch1 == 'foodnm' ">
+			    and foodnm like '%' || #{ch2} || '%' 	  
+			  </if>
+			  
+		        
+	      
+	         <![CDATA[
+	       order by datacd asc) M
+	      where rownum <= #{start}+9) K
+	  where RNUM >= #{start}
+   ]]>	
+    
+	</select> 
+	<select id="totalCount" parameterType="com.health.food.FoodVO"
+                    resultType="int" >
+
+		select count(*) from food01
+		where 1=1
+	
+	  <if test="ch1 == 'foodnm' ">
+	    and foodnm like  '%' || #{ch2} || '%' 	    
+	  </if>
+	  
+	
+	  </select>
+ 
+  	
+	<insert id="calInsert" parameterType="com.health.food.FoodVO">
+  	
+		insert into calculator(calidx,memberidx,foodcd,foodnm,enerc,prot,fatce,chocdf,sugar,nat,chole,amount)
+		values(calculatorIdx.nextval , #{memberidx},#{foodcd},#{foodnm},#{enerc},#{prot},#{fatce},#{chocdf},#{sugar},#{nat},#{chole},1)
+  	
+  	</insert>
+  	 
+	<select id="selectOne" parameterType="com.health.food.FoodVO"
+                    resultType="com.health.food.FoodVO" >
+
+		select * from food01
+		where foodCD = #{foodcd}
+	
+	</select>
+ 	
+ 	<select id="getFoodByCalIdx" parameterType="int" resultType="com.health.food.FoodVO">
+    
+    	SELECT * FROM calculator WHERE calidx = #{calidx}
+	
+	</select>
+
+	<select id="selectCal" parameterType="com.health.food.FoodVO"
+                    resultType="com.health.food.FoodVO" >
+		select * from calculator where memberidx = 10001
+	
+	</select>
+ 
+	<delete id="deletecalIdx" parameterType="com.health.food.FoodVO">
+  
+  		delete from calculator where calidx = #{calidx}
+  
+	</delete>
+ 	
+ 	<delete id="deletecalAll" parameterType="com.health.food.FoodVO">
+  
+  		delete from calculator where memberidx = #{memberidx}
+  
+	</delete>
+	<update id="updateFoodAmount" parameterType="com.health.food.FoodVO">
+    	UPDATE calculator
+    	SET amount = #{amount}
+    	WHERE calidx = #{calidx}
+	</update>
+  
+ </mapper>

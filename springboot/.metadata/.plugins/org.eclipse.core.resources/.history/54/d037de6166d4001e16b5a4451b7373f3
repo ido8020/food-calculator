@@ -1,0 +1,47 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="/include/top"></div>
+                <main>
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-7">
+                                <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">회원 가입</h3></div>
+                                    <div class="card-body">
+                                        <form>
+                                            <div class="form-floating mb-3">
+                                                <input class="form-control" id="name" type="text" name="name" placeholder="name@example.com" />
+                                                <label for="inputEmail">회원 이름 입력</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input class="form-control" id="id" type="text" />
+                                                <label for="id">아이디 입력</label>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-floating mb-3 mb-md-0">
+                                                        <input class="form-control" id="password" type="password"  />
+                                                        <label for="password">비밀번호</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-floating mb-3 mb-md-0">
+                                                        <input class="form-control" id="inputPasswordConfirm" type="password" placeholder="Confirm password" />
+                                                        <label for="inputPasswordConfirm">비밀번호 확인</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-4 mb-0">
+                                                <div class="d-grid"><a class="btn btn-primary btn-block" href="/accountOK.do">회원 가입하기</a></div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="card-footer text-center py-3">
+                                        <div class="small"><a href="/login.do">이미 아이디가 있으시다면? 로그인</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+    
+<div th:replace="/include/bottom"></div>

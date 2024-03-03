@@ -1,0 +1,31 @@
+package com.health.security;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import com.health.member.MemberServiceImpl;
+import com.health.member.MemberVO;
+
+@Service
+public class SecurityUserDetailsService implements UserDetailsService {
+	@Autowired
+	
+	MemberServiceImpl service;
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		MemberVO vo =new MemberVO();
+		vo.setName(username);
+		MemberVO user = service.loginOK(vo);
+		if (user == null) {
+			throw  new UsernameNotFoundException(username + "사용자 없음");
+		}else {
+			return new SecurityUser(user);
+		}
+		
+		
+	}
+	
+}

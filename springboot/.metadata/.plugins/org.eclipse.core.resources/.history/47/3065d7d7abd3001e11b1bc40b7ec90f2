@@ -1,0 +1,168 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="/include/top"></div>
+<!-- 테이블 스타일 -->
+<style>
+	
+    .table-container {
+        overflow-x: auto; /* 가로 스크롤이 나타나도록 함 */
+        max-width: 100%; /* 테이블 최대 너비 설정 */
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+    .table {
+        width: 100%; /* 테이블 너비 100%로 설정 */
+        table-layout: fixed; /* 테이블 레이아웃을 고정으로 설정 */
+    }
+
+    .table th,
+    .table td {
+        font-size: 18px; /* 글자 크기 조절 */
+        text-align: center; /* 텍스트 가운데 정렬 */
+        white-space: nowrap; /* 글자 줄 바꿈 방지 */
+        overflow: hidden; /* 넘치는 내용 숨김 */
+        text-overflow: ellipsis; /* 넘치는 내용을 생략 부호(...)로 표시 */
+    }
+ 	
+    /* 추가적인 스타일 조정이 필요한 경우 여기에 추가할 수 있습니다. */
+</style>
+
+<!-- 총합 부분 스타일 -->
+<style>
+    #totalenerc,
+    #totalchocdf,
+    #totalprot,
+    #totalfatce,
+    #totalsugar {
+        font-size: 20px; /* 글자 크기 조절 */
+        text-align: center; /* 텍스트 가운데 정렬 */
+        font-weight: bold; /* 글자 굵게 */
+    }
+
+    /* 추가적인 스타일 조정이 필요한 경우 여기에 추가할 수 있습니다. */
+</style>
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">계산 리스트/수정</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item"><a href="/foodCal.do">계산기로 돌아가기</a></li>
+                            <li class="breadcrumb-item active">영양소 기준은 100g당 입니다 조리 방법에 따라 정확한 계산은 불가능하니 참고 하는 용도로 사용해주세요</li>
+                        </ol>
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <p class="mb-0">
+                          <div class="table-container"> 
+                                <table class="table table-bordered" th:if="${not li.isEmpty()}">
+                            <thead>
+                                <tr>
+                                    <th width="400">음식 이름</th>
+                                    <th>칼로리</th>
+                                    <th>탄수화물</th>
+                                    <th>단백질</th>
+                                    <th>지방</th>
+                                    <th>당분</th>
+                                	<th width="100">섭취량</th>
+                                	<th width="100">삭제</th>
+                                </tr>
+                            </thead>
+                         <tbody>
+						 <tr th:each="m, iterStat : ${li}" th:data-calidx="${m.calidx}">
+							<td th:text="${m.foodnm}"></td>
+							<td th:text="${m.enerc}"></td>
+							<td th:text="${m.chocdf}"></td>
+							<td th:text="${m.prot}"></td>
+							<td th:text="${m.fatce}"></td>
+							<td th:text="${m.sugar}"></td>
+							<td>
+							       <select th:id="'amount_' + ${iterStat.count}" name="amount" onchange="changeAmount(this)">
+							            <option value=1 th:selected="${m.amount == 1}"> 100g </option>
+							            <option value=2 th:selected="${m.amount == 2}"> 200g </option>
+							            <option value=3 th:selected="${m.amount == 3}"> 300g </option>
+							            <option value=4 th:selected="${m.amount == 4}"> 400g </option>
+							            <option value=5 th:selected="${m.amount == 5}"> 500g </option>
+							        </select>
+							</td>
+							        <td onclick="deleteRow(event)" style="cursor: pointer;">
+									    <a th:href="@{/deletecalIdx.do(calidx=${m.calidx})}">
+									        <i class="fas fa-trash-alt"></i>
+									    </a>
+									</td>
+							    </tr>
+							</tbody>
+							
+							<tr>
+							    <td>총합</td>
+							    <td id="totalenerc" th:text="${totalenerc}"></td>
+								<td id="totalchocdf" th:text="${totalchocdf}"></td>
+								<td id="totalprot" th:text="${totalprot}"></td>
+								<td id="totalfatce" th:text="${totalfatce}"></td>
+								<td id="totalsugar" th:text="${totalsugar}"></td>
+								<td colspan=2></td>
+							</tr>
+                        </table>
+                            </div>     
+                           </div>
+                        
+                        </div>
+                        <div class="card mb-4"><div class="card-body">TIP : 영양사가 추천하는 탄단지 비율은 5:3:2 이고 체중 감량이 목적이라면 당분을 적게 섭취해야 합니다<br>*섭취량만 선택하면 자동으로 계산됩니다</div></div>
+                        
+                    </div>
+                </main>
+
+<div th:replace="/include/bottom"></div>
+<script  src="http://code.jquery.com/jquery-1.10.2.js" ></script>
+<!-- JavaScript 추가 -->
+<script>
+function changeAmount(select) {
+    var selectedAmount = $(select).val();
+    var calidx = $(select).closest("tr").attr("data-calidx");
+
+    $.ajax({
+        type: "POST",
+        url: "/updateAmount.do",
+        data: { calidx: calidx, amount: selectedAmount },
+      
+        success: function (data) {
+            updateUI(data);
+        },
+        error: function () {
+            alert("서버와의 통신 중 오류가 발생했습니다.");
+        }
+    });
+}
+
+// 각 select 엘리먼트에 이벤트 핸들러 바인딩
+$('select[name="amount"]').change(function() {
+    changeAmount(this);
+});
+
+function updateUI(data) {
+    // 각 엘리먼트의 id에 해당하는 부분을 업데이트
+    $('#totalenerc').text(data.totalenerc);
+    $('#totalchocdf').text(data.totalchocdf);
+    $('#totalprot').text(data.totalprot);
+    $('#totalfatce').text(data.totalfatce);
+    $('#totalsugar').text(data.totalsugar);
+    // 추가로 업데이트할 엘리먼트가 있으면 동일한 방식으로 추가
+}
+function deleteRow(event) {
+    // 이벤트 전파 중지
+    event.stopPropagation();
+
+    // 해당 행을 삭제하는 코드 추가
+    var row = $(event.currentTarget).closest('tr');
+    
+    // foodnm 값을 가져옴
+    var foodnm = row.find('td:first-child').text();
+  
+        alert(foodnm + '이(가) 삭제되었습니다.');
+        row.remove();
+        
+        // 삭제 요청을 보내는 코드
+        var deleteLink = row.find('a');
+        window.location.href = deleteLink.attr('href');
+}
+
+</script>

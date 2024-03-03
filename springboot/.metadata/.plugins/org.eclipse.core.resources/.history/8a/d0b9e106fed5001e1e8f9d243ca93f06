@@ -1,0 +1,43 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="/include/top"></div>
+ 
+        <main class="container">
+             <div class="row">
+                <div class="col-md-3">
+            	<!-- 세션에 loginUser가 없으면 로그아웃 상태로 간주 -->
+           		<th:block th:if="${session.loginUser == null}">
+                	<a th:href="@{/login.do}">
+                   		<i class="fas fa-sign-in-alt"></i> 로그인/회원가입
+                	</a>
+            	</th:block>
+            	
+            	<!-- 세션에 loginUser가 있으면 로그인 상태로 간주 -->
+            	<th:block th:if="${session.loginUser != null}">
+				    <a th:href="@{/logout.do}">
+				        <i class="fas fa-sign-out-alt"></i> [[${session.loginUser.name}]] 님 로그아웃
+				    </a>
+				</th:block>
+        		</div>
+                
+                <div class="col-md-3">
+                	<a th:href="@{/foodCal.do}">
+                            <i class="fas fa-utensils"></i> 식단 계산하기
+                    </a>
+                </div>
+                
+                <div class="col-md-3">
+                	<a th:href="@{/foodCalEdit.do}">
+                    	<i class="fas fa-edit"></i> 식단 수정하기
+                	</a>
+                </div>
+                <div class="col-md-3" th:if="${session.loginUser != null and session.loginUser.role == 'admin'}">
+				    <a th:href="@{/memberList.do}">
+				        <i class="fas fa-users"></i> 회원목록
+				    </a>
+				</div>
+                <br/>
+   				
+                </div>
+                <br/>
+            </main>
+<div th:replace="/include/bottom"></div>

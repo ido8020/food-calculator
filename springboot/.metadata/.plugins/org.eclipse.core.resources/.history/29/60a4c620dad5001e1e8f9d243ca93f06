@@ -1,0 +1,74 @@
+package com.health.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.health.member.MemberService;
+import com.health.member.MemberVO;
+
+import jakarta.servlet.http.HttpSession;
+
+
+@Controller
+public class LoginController {
+
+	@Autowired
+	private MemberService service;
+	
+	
+	@PostMapping("/loginOK.do")
+	public String loginOK(@RequestParam String id, @RequestParam String password,Model model,HttpSession session) {
+		MemberVO vo=new MemberVO();
+		vo.setId(id);
+        vo.setPassword(password);
+
+        MemberVO result = service.loginOK(vo);
+        
+        if (result != null) {
+            // 로그인 성공 시
+       	   session.setAttribute("loggedInUser", result);
+           return "redirect:/index.do";
+        } else {
+            // 로그인 실패 시
+        	model.addAttribute("loginF","아이디와 비밀번호를 확인해주세요");
+            return "redirect:/login.do"; // 로그인 페이지로 다시 이동하도록 수정
+        } 
+		
+	}
+	@GetMapping("logout.do")
+	public String logout() {		
+	
+		return "redirect:/index.do";			
+	}
+	//로그인 관련 페이지
+		@GetMapping("/login.do")
+	 public String login() { 
+	
+		return "/login/login.html";
+	}
+	@GetMapping("/register.do")
+	String register() {
+		
+		return "/login/register.html";
+			
+	}
+	@GetMapping("/password.do")
+	public String password() {
+		
+		return "/login/password.html";
+			
+	}
+	@GetMapping("/accountOK.do")
+	public String accountOK(MemberVO vo) {
+			
+		service.memberInsert(vo);
+		return "/login/accountOK.html";
+			
+	}
+}

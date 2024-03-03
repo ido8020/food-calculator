@@ -1,0 +1,151 @@
+package com.health.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import com.health.food.FoodService;
+import com.health.food.FoodVO;
+
+@Controller
+public class DataController {
+	
+	@Autowired
+	private FoodService service;
+	
+	@GetMapping("/DataXML.do")
+	public  String   datainsert() throws Exception {
+		
+		String URL = "http://api.data.go.kr/openapi/tn_pubr_public_nutri_info_api";
+		String SERVICEKEY = "N6HNTIVZBTwczXJgSs6KujofRwXnrsZzEQ07w7nnrUApbweR7KdIqRoAZygy5HkDLfDbPUoirqbu2EAlkcMRiQ%3D%3D";
+        String RESULTTYPE ="xml" ;
+        String PAGENO = "1";
+        String NUMOfRows ="12242";
+		
+		StringBuilder urlBuilder = new StringBuilder(URL); /*URL*/
+        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=" + SERVICEKEY ); /*Service Key (일반인증키)*/
+        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode(PAGENO, "UTF-8")); /*페이지 번호*/
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode(NUMOfRows, "UTF-8")); 
+        urlBuilder.append("&" + URLEncoder.encode("type","UTF-8") + "=" + URLEncoder.encode(RESULTTYPE, "UTF-8")); 
+        urlBuilder.append("&" + URLEncoder.encode("dataCd","UTF-8") + "=" + URLEncoder.encode("D", "UTF-8"));        
+        URL url = new URL(urlBuilder.toString());
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-type", "application/json");
+        System.out.println("Response code: " + conn.getResponseCode());
+        BufferedReader rd;
+        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        } else {
+            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+        }
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = rd.readLine()) != null) {
+            sb.append(line);
+        }
+        rd.close();
+        conn.disconnect();
+        System.out.println(sb.toString());
+        
+        Node data1 = null;   
+        Node data2 = null;   
+        Node data3 = null;
+        Node data4 = null;
+        Node data5 = null;
+        Node data6 = null;
+        Node data7 = null;
+        Node data8 = null;
+        Node data9 = null;
+        Node data10 = null;
+        
+        try {
+        	DocumentBuilderFactory	dbFactory = DocumentBuilderFactory.newInstance();
+        	DocumentBuilder dBuilder=dbFactory.newDocumentBuilder();
+        	
+        	FileOutputStream output = new FileOutputStream("./ApiExplorer");
+        	output.write(sb.toString().getBytes("UTF-8"));  // 전체 데이터 읽어 오기 
+        	output.close();
+        	
+        	Document doc = dBuilder.parse("./ApiExplorer");
+        	doc.getDocumentElement().normalize();
+        	
+        	Element body =(Element) doc.getElementsByTagName("body").item(0);
+        	Element items =(Element) body.getElementsByTagName("items").item(0);
+        	
+        	//전체 레코드 삭제후에 저장하는 곳
+        	service.deleteAll();
+       
+        	// 배열의 시작은 0번 부터 
+        	for(int i=0 ; i<=12242 ; i++ ) {
+	        	Element item =(Element) items.getElementsByTagName("item").item(i);
+	        	
+	        	data1 = item.getElementsByTagName("foodCd").item(0);  // 필요한 데이터 값 추출하기 
+	        	data2 = item.getElementsByTagName("foodNm").item(0);
+	        	data3 = item.getElementsByTagName("dataCd").item(0);
+	        	data4 = item.getElementsByTagName("enerc").item(0);
+	        	data5 = item.getElementsByTagName("prot").item(0);
+	        	data6 = item.getElementsByTagName("fatce").item(0);
+	        	data7 = item.getElementsByTagName("chocdf").item(0);
+	        	data8 = item.getElementsByTagName("sugar").item(0);
+	        	data9 = item.getElementsByTagName("chole").item(0);
+	        	data10 = item.getElementsByTagName("nat").item(0);
+	        	
+		        
+	        	
+	        	String strData1 = data1.getChildNodes().item(0).getNodeValue();
+	        	String strData2 = data2.getChildNodes().item(0).getNodeValue();
+	        	String strData3 = data3.getChildNodes().item(0).getNodeValue();
+	        	String strData4 = data4.getChildNodes().item(0).getNodeValue();
+	        	String strData5 = data5.getChildNodes().item(0).getNodeValue();
+	        	String strData6 = data6.getChildNodes().item(0).getNodeValue();
+	        	String strData7 = data7.getChildNodes().item(0).getNodeValue();
+	        	String strData8 = data8.getChildNodes().item(0).getNodeValue();
+	        	String strData9 = data9.getChildNodes().item(0).getNodeValue();
+	        	String strData10 = data10.getChildNodes().item(0).getNodeValue();
+	        	
+	        
+	        	
+	        	
+	        	FoodVO vo = new FoodVO();
+	        	
+	        	vo.setFoodcd(strData1);
+	        	vo.setFoodnm(strData2);
+	        	vo.setDatacd(strData3);
+	        	vo.setEnerc(Double.parseDouble(strData4));
+	        	vo.setProt(Double.parseDouble(strData5));
+	        	vo.setFatce(Double.parseDouble(strData6));
+	        	vo.setChocdf(Double.parseDouble(strData7));
+	        	vo.setSugar(Double.parseDouble(strData8));
+	        	vo.setChole(Double.parseDouble(strData9));
+	        	vo.setNat(Double.parseDouble(strData10));
+	        	
+	        	
+	        	System.out.println(i+"번 데이터 입력");
+	        	service.datainsert(vo);
+	        	Thread.sleep(500); // 100밀리초(0.1초) 딜레이
+        	}        	
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
+		return "redirect:/foodCal.do";        
+    }
+
+}
+

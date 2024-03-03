@@ -1,0 +1,80 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="/include/top"></div>
+                <main>
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-7">
+                                <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">회원 가입</h3></div>
+                                    <div class="card-body">
+                                        <form action="/accountOK.do" onsubmit="return validateForm()">
+                                              <div class="form-floating mb-3">
+                                                <input class="form-control" id="id" type="text" />
+                                                <label for="id">아이디 입력</label>
+                                            </div>
+                                            <!-- 비밀번호와 비밀번호 확인 -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="form-floating mb-3 mb-md-0">
+                <input class="form-control" id="password" type="password" name="password" />
+                <label for="password">비밀번호</label>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-floating mb-3 mb-md-0">
+                <input class="form-control" id="inputPasswordConfirm" type="password" placeholder="Confirm password" />
+                <label for="inputPasswordConfirm">비밀번호 확인</label>
+            </div>
+        </div>
+    </div>
+  <input type=hidden name="role" value="member">
+  <div class="form-floating mb-3">
+                                                <input class="form-control" id="name" type="text" name="name" />
+                                                <label for="inputEmail">회원 이름 입력</label>
+                                            </div>
+                                       
+                                            <div class="d-grid">
+										        <button class="btn btn-primary btn-block" type="submit">회원 가입하기</button>
+										    </div>	
+                                        </form>
+                                    </div>
+                                    <div class="card-footer text-center py-3">
+                                        <div class="small"><a href="/login.do">이미 아이디가 있으시다면? 로그인</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+    <script>
+    function validateForm() {
+        var name = document.getElementById("name").value;
+        var id = document.getElementById("id").value;
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("inputPasswordConfirm").value;
+
+        if (!name) {
+            alert("이름을 입력해주세요.");
+            return false;
+        }
+
+        if (!id) {
+            alert("아이디를 입력해주세요.");
+            return false;
+        }
+
+        if (!password) {
+            alert("비밀번호를 입력해주세요.");
+            return false;
+        }
+
+        if (password !== confirmPassword) {
+            alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            return false;
+        }
+
+        return true;
+
+    }
+</script>
+<div th:replace="/include/bottom"></div>

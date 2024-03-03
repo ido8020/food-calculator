@@ -1,0 +1,41 @@
+package com.health.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.health.member.MemberService;
+import com.health.member.MemberVO;
+
+
+@Controller
+public class LoginController {
+
+	@Autowired
+	private MemberService service;
+	
+	
+	@PostMapping("/loginOK.do")
+	public ResponseEntity<String> loginOK(@RequestParam String id, @RequestParam String password) {
+		MemberVO vo=new MemberVO();
+		vo.setId(id);
+        vo.setPassword(password);
+
+        MemberVO result = service.loginOK(vo);
+        if (result != null) {
+            return ResponseEntity.ok("로그인 성공");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디와 비밀번호를 확인해주세요");
+        }
+		
+	}
+	@GetMapping("logout.do")
+	 String logout() {		
+	
+	   return "redirect:/index.do";			
+	}
+}

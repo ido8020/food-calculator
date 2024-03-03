@@ -1,0 +1,28 @@
+package com.health.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.health.member.MemberVO;
+
+
+
+
+
+@Controller
+public class LoginController {
+
+	
+	@GetMapping("/loginOK.do")
+	String loginOK() {
+		MemberVO vo=new MemberVO();
+		
+		return "/index.do";
+		
+	}
+	@GetMapping("logout.do")
+	 String logout() {		
+	
+	   return "/index.do";			
+	}
+}

@@ -1,0 +1,42 @@
+package com.health.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.health.member.MemberService;
+import com.health.member.MemberVO;
+
+
+@Controller
+public class LoginController {
+
+	@Autowired
+	private MemberService service;
+	
+	
+	@PostMapping("/loginOK.do")
+	String loginOK(@RequestParam String id, @RequestParam String password) {
+		MemberVO vo=new MemberVO();
+		vo.setId(id);
+        vo.setPassword(password);
+
+        MemberVO result = service.loginOK(vo);
+
+        if (result != null) {
+            // 로그인 성공
+            return "redirect:/index.do"; // 성공 시 메인 페이지로 이동
+        } else {
+            // 로그인 실패
+            return "redirect:/login?error=true"; // 실패 시 다시 로그인 페이지로 이동 (에러 메시지 포함)
+        }
+		
+	}
+	@GetMapping("logout.do")
+	 String logout() {		
+	
+	   return "redirect:/index.do";			
+	}
+}

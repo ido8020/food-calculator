@@ -1,0 +1,91 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="/include/top"></div>
+                <main>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">영양 성분 계산,입력하기</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="/foodCalEdit.do">계산된 목록보기</a></li>
+            <li class="breadcrumb-item active"></li>
+        </ol>
+        <div class="card mb-4">
+            <div class="card-body">
+                <p class="mb-0">
+                <h1 th:if="${li.isEmpty()}">검색 결과가 없습니다.</h1>
+  						
+                        <table class="table table-bordered" th:if="${not li.isEmpty()}">
+                            <thead>
+                                <tr>
+                                    <th>음식 이름</th>
+                                    <th>칼로리</th>
+                                    <th>탄수화물</th>
+                                    <th>단백질</th>
+                                    <th>지방</th>
+                                    <th>당분</th>
+                                    <th>계산기에 추가하기</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="m:${li}">
+                                    <td th:text="${m.foodnm}"></td>
+                                    <td th:text="${m.enerc}"></td>
+                                    <td th:text="${m.chocdf}"></td>
+                                    <td th:text="${m.prot}"></td>
+                                    <td th:text="${m.fatce}"></td>
+                                    <td th:text="${m.sugar}"></td>
+                                    <td>
+	                                    <a th:href="/foodcalOK.do">
+	               						<i class="fas fa-calculator">
+	             						</i> 계산 추가
+	            						</a>
+	            					</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                   <form action="/foodCal.do">
+					  <select name="ch1">
+						  <option value=foodnm>음식이름</option>
+					  </select>
+						  <input type=text name="ch2">
+						  <input type=submit value="검색하기">
+					</form>
+ <!-- 페이지 나누기 -->
+<a  th:href="@{/foodCal.do(start=1, ch1=${ch1}, ch2=${ch2})}"
+	 th:text="처음페이지"></a>&nbsp; 
+
+ <th:black th:if="${listStartPage > pageListSize}"  th:with="start=${(listStartPage - pageListSize -1) * pageSize  + 1}">  
+	 <a  th:href="@{/foodCal.do(start=${start}, ch1=${ch1}, ch2=${ch2})}"
+	     th:text="이전10페이지"></a>&nbsp;
+ </th:black>
+ <th:black th:if="${listStartPage <= pageListSize}"  > 	 
+	    이전10페이지
+ </th:black>
+
+  
+<th:block th:each="i : ${#numbers.sequence(listStartPage,listEndPage)}">
+    <th:black th:with="start=${(i-1) * pageSize + 1}"> 
+      <th:black th:if="${i <= totalPage }">
+	  [<a th:href="@{/foodCal.do(start=${start}, ch1=${ch1}, ch2=${ch2})}"
+	     th:text="${i}"></a>]&nbsp;
+	  </th:black>
+	<th:black>
+</th:block>
+
+ <th:black th:if="${listEndPage < totalPage}"  th:with="start  =${listEndPage * pageSize + 1}">  
+	 <a  th:href="@{/foodCal.do(start=${start}, ch1=${ch1}, ch2=${ch2})}"
+	     th:text="다음10페이지"></a>&nbsp;
+ </th:black>
+ <th:black th:if="${listEndPage >= totalPage}"  > 	 
+	    다음10페이지
+ </th:black>		
+  
+  
+ <th:black th:with="endPage =${( totalPage - 1) * pageSize + 1}">  
+	 <a  th:href="@{/foodCal.do(start=${endPage}, ch1=${ch1}, ch2=${ch2})}"
+	     th:text="마지막페이지"></a>&nbsp;
+ </th:black>	
+  
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="/include/bottom"></div>

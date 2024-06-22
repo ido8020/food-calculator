@@ -1,0 +1,54 @@
+<!--  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ -->
+ 
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "E:\DTD\mybatis-3-mapper.dtd">
+ <mapper namespace="com.health.food.FoodDao">
+  
+  <select id="selectAll" parameterType="com.health.food.FoodVO"
+                    resultType="com.health.food.FoodVO" >
+<![CDATA[
+	  select rownum, K.* 
+	   from 
+	     (select rownum as rnum, M.*
+	      from (select * from food 	      
+	          WHERE 1=1
+	         ]]>
+	         	
+			  <if test="ch1 == 'foodnm' ">
+			    and foodnm like '%' || #{ch2} || '%' 	  
+			  </if>
+			  
+		        
+	      
+	         <![CDATA[
+	       order by typenm desc) M
+	      where rownum <= #{start}+9) K
+	  where RNUM >= #{start}
+   ]]>	
+    
+  </select> 
+ <select id="totalcount" parameterType="com.health.food.FoodVO"
+                    resultType="int" >
+
+	  select count(*) from food
+    	where 1=1
+	
+	  <if test="ch1 == 'foodnm' ">
+	    and foodnm like  '%' || #{ch2} || '%' 	    
+	  </if>
+	  
+
+  </select>
+    <delete id="deleteAll" >   
+    	delete from food01     
+  	</delete>
+  	
+  	<insert id="datainsert" parameterType="com.health.food.FoodVO">
+  	insert into food01(foodcd,foodnm,datacd,enerc,prot,fatce,chocdf,sugar,nat,chole)
+  	values(#{foodcd},#{foodnm},#{datacd},#{enerc},#{prot},#{fatce},#{chocdf},#{sugar},#{nat},#{chole})
+  	
+  	</insert>
+ </mapper>

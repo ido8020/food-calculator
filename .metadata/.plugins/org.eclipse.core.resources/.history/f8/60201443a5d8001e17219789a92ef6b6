@@ -1,0 +1,88 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="/include/top"></div>
+<style>
+	
+    .table-container {
+        overflow-x: auto; /* 가로 스크롤이 나타나도록 함 */
+        max-width: 100%; /* 테이블 최대 너비 설정 */
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+    .table {
+        width: 50%; /* 테이블 너비 100%로 설정 */
+        table-layout: fixed; /* 테이블 레이아웃을 고정으로 설정 */
+    }
+
+    .table th,
+    .table td {
+        font-size: 18px; /* 글자 크기 조절 */
+        text-align: center; /* 텍스트 가운데 정렬 */
+        white-space: nowrap; /* 글자 줄 바꿈 방지 */
+        overflow: hidden; /* 넘치는 내용 숨김 */
+        text-overflow: ellipsis; /* 넘치는 내용을 생략 부호(...)로 표시 */
+    }
+ 	
+    /* 추가적인 스타일 조정이 필요한 경우 여기에 추가할 수 있습니다. */
+</style>
+
+<main>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">회원 수정</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="/memberList.do">회원목록으로 돌아가기</a></li>
+            <li class="breadcrumb-item active"></li>
+        </ol>
+        <div class="card mb-4">
+            <div class="card-body">
+                <p class="mb-0">
+	<form action="/memberUpdate.do">
+		<table class="table table-bordered">
+	        <tr>
+	            <td>회원 번호</td>
+	            <td><input type="text" th:field="${m.memberidx}" readonly></td>
+	        </tr>
+	        <tr>
+	            <td>아이디</td>
+	            <td><input type="text" name="id" th:field="${m.id}"></td>
+	        </tr>
+	        <tr>
+	            <td>비밀번호</td>
+	            <td><input type="text" name="password" th:field="${m.password}"></td>
+	        </tr>
+	        <tr>
+	            <td>권한</td>
+	            <td>
+	                <select th:field="${m.role}" name="role" onchange="roleCK()">
+	                    <option value="member" th:selected="${m.role == 'member'}">회원</option>
+	                    <option value="admin" th:selected="${m.role == 'admin'}">관리자</option>
+	                </select>
+	            </td>
+	        </tr>
+	        <tr>
+	            <td>이름</td>
+	            <td><input type="text" name="name" th:field="${m.name}"></td>
+	        </tr>
+	    <tr>    
+    	<td colspan=2><input type="submit" value="수정완료"></td>
+    	</tr>
+    	</table>
+			</form>     
+            </div>
+        </div>
+    </div>
+<script>
+    function roleCK() {
+        // 셀렉트 박스의 값이 변경될 때 실행되는 함수
+        var selectedValue = document.getElementsByName("role")[0].value;
+
+        // 변경된 값에 대한 조건을 확인하고 알람 창을 띄웁니다.
+        if (selectedValue === "원하는값") {
+            alert("값이 변경되었습니다!");
+        }
+    }
+</script>
+</main>
+<div th:replace="/include/bottom"></div>

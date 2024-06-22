@@ -15,7 +15,7 @@
                 	</a>
             	</th:block>
             	
-            	<!-- 세션에 loginUser가 있으면 로그인 상태로 간주 -->
+            	<!-- 세션에 loginUser가 있으면 로그인 상태로 간주 1-->
             	<th:block th:if="${session.loginUser != null}">
 				    <a th:href="@{/logout.do}" class="large-text">
 				        <i class="fas fa-sign-out-alt"></i> [[${session.loginUser.name}]] 님 로그아웃

@@ -10,15 +10,17 @@ public class MemberServiceImpl implements MemberService {
 	@Autowired
 	private MemberDao dao;
 
-
+	
 
 	@Override
 	public void memberInsert(MemberVO vo) {
 		// TODO Auto-generated method stub
+		if (isIdExists(vo.getId())) {
+            throw new RuntimeException("이미 존재하는 아이디입니다.");
+        }
 		dao.memberInsert(vo);
 	}
-
-
+	
 
 	@Override
 	public List<MemberVO> memberList() {
@@ -48,5 +50,12 @@ public class MemberServiceImpl implements MemberService {
 	public void memberUpdate(MemberVO vo) {
 		// TODO Auto-generated method stub
 		dao.memberUpdate(vo);
+	}
+
+
+	@Override
+	public boolean isIdExists(String id) {
+		// TODO Auto-generated method stub
+		return dao.selectMemberById(id) !=null;
 	}
 }

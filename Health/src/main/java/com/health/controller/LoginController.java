@@ -58,17 +58,37 @@ public class LoginController {
 	
 	//회원가입
 	@GetMapping("/register.do")
-	String register() {
-		
+	String register(@RequestParam(required = false) String message, Model model) {
+		 if (message != null) {
+	            model.addAttribute("registerError", message);
+	        }
 		return "/login/register.html";
 			
 	}
 	//회원가입 완료
 	@GetMapping("/accountOK.do")
-	String accountOK(MemberVO vo) {
-			
-		service.memberInsert(vo);
-		return "/login/accountOK.html";
-			
+	String accountOK(MemberVO vo, Model model) {
+		try {
+            // 아이디 중복 체크
+            if (service.isIdExists(vo.getId())) {
+                // 쿼리 파라미터로 에러 메시지를 전달
+                return "redirect:/register.do?message=" + encodeURIComponent("이미 존재하는 아이디입니다.");
+            }
+
+            // 회원가입 처리
+            service.memberInsert(vo);
+            return "/login/accountOK.html";
+        } catch (RuntimeException e) {
+            e.printStackTrace(); // 로그에 에러를 기록합니다.
+            return "redirect:/register.do?message=" + encodeURIComponent("회원가입 처리 중 오류가 발생했습니다.");
+        }
+
+}
+	private String encodeURIComponent(String value) {
+		 try {
+	            return java.net.URLEncoder.encode(value, "UTF-8");
+	        } catch (Exception e) {
+	            return value;
+	        }
 	}
 }

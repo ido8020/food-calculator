@@ -37,4 +37,10 @@
     	update member SET id = #{id}, password = #{password}, role = #{role}, name = #{name}
 		where memberidx = #{memberidx}
 	</update>
+	
+	<!-- 아이디로 회원 조회 -->
+    <select id="selectMemberById" parameterType="String" resultType="com.health.member.MemberVO">
+        SELECT * FROM member WHERE id = #{id}
+    </select>
+	
  </mapper>

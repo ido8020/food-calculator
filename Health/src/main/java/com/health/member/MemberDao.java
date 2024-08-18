@@ -11,4 +11,7 @@ public interface MemberDao {
 	MemberVO loginOK(MemberVO vo);
 	MemberVO memberListOne(MemberVO vo);
 	void memberUpdate(MemberVO vo);
+	// 아이디로 회원 조회
+    MemberVO selectMemberById(String id);
+
 }

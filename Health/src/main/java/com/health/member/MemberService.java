@@ -8,4 +8,5 @@ public interface MemberService {
 	MemberVO loginOK(MemberVO vo);
 	MemberVO memberListOne(MemberVO vo);
 	void memberUpdate(MemberVO vo);
+	boolean isIdExists(String id);
 }
